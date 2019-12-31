@@ -59,7 +59,7 @@ void setup()
 
   Serial.println("===========================================================");
   Serial.println();
-  Serial.print("Kingswood LoRa Receiver v.");
+  Serial.print("Kingswood LoRa Transmitter v.");
   Serial.println(FIMWARE_VERSION);
   Serial.println();
   Serial.print("Firmware filename   : ");
@@ -70,6 +70,7 @@ void setup()
   Serial.println(DEVICE_ID);
   Serial.print("Sample interval (s) : ");
   Serial.println(SLEEP_SECONDS);
+  Serial.println();
   Serial.println("===========================================================");
   Serial.println();
 
