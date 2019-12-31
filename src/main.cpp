@@ -1,11 +1,30 @@
+/*
+ * feather32u4_rfm9x-arduino-lora433TX
+ * 
+ * Firmware for the LoRa transmitter. 
+ * Reads SH22 temperature and pressure, packages as JSON string, and transmits.
+ * 
+ * NOTE: Implements 'sleep' function between data transmission, which disables the USB serial line.
+ * Reset the device before flashing.
+ */
+
 #include <SPI.h>
 #include <LoRa.h>
 #include <DHT.h>
 #include <ArduinoJson.h>
 #include <Adafruit_SleepyDog.h>
 
+#define FIRMWARE_FILENAME "feather32u4_rfm9x-arduino-lora433TX"
+#define FIMWARE_VERSION 1.0
+
+// sensor type for firmware message
+#define SENSOR_TYPE "DH22 temperature/humidity"
+
 // device ID for data
-#define DEVICEID "greenhouse"
+#define DEVICE_ID "greenhouse"
+
+// number of seconds between transmissions
+#define SLEEP_SECONDS 10
 
 // pin assignments
 #define LED_BUILTIN 13
@@ -37,11 +56,26 @@ void setup()
   {
     delay(1);
   }
-  Serial.println("LoRa Sender non-blocking");
+
+  Serial.println("===========================================================");
+  Serial.println();
+  Serial.print("Kingswood LoRa Receiver v.");
+  Serial.println(FIMWARE_VERSION);
+  Serial.println();
+  Serial.print("Firmware filename   : ");
+  Serial.println(FIRMWARE_FILENAME);
+  Serial.print("Sensor type         : ");
+  Serial.println(SENSOR_TYPE);
+  Serial.print("Sensor ID           : ");
+  Serial.println(DEVICE_ID);
+  Serial.print("Sample interval (s) : ");
+  Serial.println(SLEEP_SECONDS);
+  Serial.println("===========================================================");
+  Serial.println();
 
   if (!LoRa.begin(433E6))
   {
-    Serial.println("Starting LoRa failed!");
+    Serial.println("Starting LoRa failed.");
     while (1)
       ;
   }
@@ -51,7 +85,7 @@ void loop()
 {
 
   digitalWrite(LED_BUILTIN, LOW); // show we're asleep
-  int sleepMS = Watchdog.sleep(5 * 1000);
+  int sleepMS = Watchdog.sleep(SLEEP_SECONDS * 1000);
 
   // Code resumes here on wake.
   digitalWrite(LED_BUILTIN, HIGH);
@@ -67,7 +101,7 @@ void loop()
   measuredvbat /= 1024; // convert to voltage
 
   // Build the sensor data JSON
-  doc["sensor"] = DEVICEID;
+  doc["deviceID"] = DEVICE_ID;
   doc["temperature"] = temperature;
   doc["humdity"] = humidity;
   doc["voltage"] = measuredvbat;
@@ -77,11 +111,8 @@ void loop()
   // wait until the radio is ready to send a packet
   while (LoRa.beginPacket() == 0)
   {
-    // Serial.print("waiting for radio ... ");
     delay(100);
   }
-
-  // Serial.println("Sending packet non-blocking: ");
 
   // send in async / non-blocking mode
   LoRa.beginPacket();
