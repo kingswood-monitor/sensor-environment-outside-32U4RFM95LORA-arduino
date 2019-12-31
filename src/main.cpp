@@ -24,7 +24,7 @@
 #define DEVICE_ID "greenhouse"
 
 // number of seconds between transmissions
-#define SLEEP_SECONDS 10
+#define SLEEP_SECONDS 3
 
 // pin assignments
 #define LED_BUILTIN 13
