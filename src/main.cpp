@@ -14,7 +14,7 @@ JsonObject sensors_DH22 = sensors.createNestedObject("DH22");
 JsonObject sensors_battery = sensors.createNestedObject("battery");
 
 // serialise the JSON for transmission
-const char *toJsonString(const char *deviceID, const float temperature, const float humidity, const float voltage);
+void toJsonString(const char *deviceID, const float temperature, const float humidity, const float voltage, char *serialData, int length);
 
 // DH22 temperature/humidity sensor
 DHT dht;
@@ -60,7 +60,8 @@ void loop()
   measuredvbat /= 1024; // convert to voltage
 
   // serialise the JSON for transmission
-  const char *serialData = toJsonString(DEVICE_ID, temperature, humidity, measuredvbat);
+  char serialData[255];
+  toJsonString(DEVICE_ID, temperature, humidity, measuredvbat, serialData, sizeof(serialData) - 1);
 
   // send in async / non-blocking mode
   while (LoRa.beginPacket() == 0)
@@ -72,6 +73,10 @@ void loop()
   LoRa.print(serialData);
   LoRa.endPacket(true); // true = async / non-blocking mode
 
+  // log to serial port
+  Serial.print("TX: ");
+  Serial.println(serialData);
+
   delay(50);                      // Lets the light flash to show transmission
   digitalWrite(LED_BUILTIN, LOW); // show we're asleep
 
@@ -82,18 +87,13 @@ void loop()
 
 // serialise the JSON document from the data
 // TODO: FIX RETURNING ADDRESS OF LOCAL VARIABLE
-const char *toJsonString(const char *deviceID, const float temperature, const float humidity, const float voltage)
+
+void toJsonString(const char *deviceID, const float temperature, const float humidity, const float voltage, char *serialData, int length)
 {
   doc["deviceID"] = deviceID;
   sensors_DH22["temperature"] = temperature;
   sensors_DH22["humidity"] = humidity;
   sensors_battery["voltage"] = voltage;
 
-  char output[255];
-  serializeJson(doc, output);
-
-  serializeJsonPretty(doc, Serial);
-  Serial.println();
-
-  return output;
+  serializeJson(doc, serialData, length);
 }
