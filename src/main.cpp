@@ -1,3 +1,21 @@
+/* feather32u4_rfm9x-arduino-lora433TX
+ * 
+ * Firmware for the LoRa transmitter. 
+ * Reads sensor data and battery voltage, packages as JSON string, and transmits.
+ * 
+ * Typical JSON structure:
+ * {
+ *  "deviceID": "FEATHE32U4RFM9XLORA001",
+ *  "sensors": {
+ *     "DH22": {"temperature": 21.2, "humidity": 99.8 },
+ *     "battery": {"voltage": 3.7}
+ *  }
+ * }
+ * 
+ * NOTE: Implements 'sleep' function between data transmission, which disables the USB serial line.
+ * Reset the device before flashing.
+ */
+
 #include <SPI.h>
 #include <LoRa.h>
 #include <DHT.h>
