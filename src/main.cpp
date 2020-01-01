@@ -75,7 +75,7 @@ void loop()
   LoRa.endPacket(true); // true = async / non-blocking mode
 
   // log to serial port
-  Serial.print("TX: ");
+  Serial.print("TX Packet: ");
   Serial.println(serialData);
 
   delay(50);                      // Lets the light flash to show transmission
