@@ -4,6 +4,7 @@
 
 #include "main.h"
 #include "utils.h"
+#include <Adafruit_SleepyDog.h>
 #include <ArduinoJson.h>
 
 // Create the empty JSON document
@@ -81,8 +82,8 @@ void loop()
   digitalWrite(LED_BUILTIN, LOW); // show we're asleep
 
   // sleep
-  // Watchdog.sleep(SLEEP_SECONDS * 1000);
-  delay(SLEEP_SECONDS * 1000);
+  Watchdog.sleep(SLEEP_SECONDS * 1000);
+  // delay(SLEEP_SECONDS * 1000);
 }
 
 // serialise the JSON document from the data
