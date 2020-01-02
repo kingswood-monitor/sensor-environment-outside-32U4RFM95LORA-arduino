@@ -4,7 +4,7 @@
 // Firmware info
 #define FIRMWARE_FILENAME "feather32u4_rfm9x-arduino-lora433TX"
 #define FIRMWARE_VERSION 1.1
-#define DEVICE_ID "FEATHER32U4LORA-001"
+#define DEVICE_ID "32U4RFM95LORA-001"
 
 // pin assignments
 #define LED_BUILTIN 13   // red onboard LED
