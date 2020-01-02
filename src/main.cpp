@@ -35,10 +35,7 @@ unsigned int packetID;
 void setup()
 {
   Serial.begin(115200);
-  while (!Serial)
-  {
-    delay(1);
-  }
+  delay(1000);
 
   // print the firmware banner information
   printBanner(FIRMWARE_FILENAME, FIRMWARE_VERSION, DEVICE_ID);
