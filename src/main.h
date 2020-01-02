@@ -3,7 +3,7 @@
 
 // Firmware info
 #define FIRMWARE_FILENAME "feather32u4_rfm9x-arduino-lora433TX"
-#define FIRMWARE_VERSION 1.1
+#define FIRMWARE_VERSION 1.2
 #define DEVICE_ID "32U4RFM95LORA-001"
 
 // pin assignments

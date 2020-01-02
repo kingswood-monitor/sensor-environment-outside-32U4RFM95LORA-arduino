@@ -2,16 +2,7 @@
  * 
  * Firmware for the LoRa transmitter. 
  * Reads sensor data and battery voltage, packages as JSON string, and transmits.
- * 
- * Typical JSON structure:
- * {
- *  "deviceID": "FEATHE32U4RFM9XLORA001",
- *  "sensors": {
- *     "DH22": {"temperature": 21.2, "humidity": 99.8 },
- *     "battery": {"voltage": 3.7}
- *  }
- * }
- * 
+ *  
  * NOTE: Implements 'sleep' function between data transmission, which disables the USB serial line.
  * Reset the device before flashing.
  */
@@ -26,17 +17,20 @@
 #include <ArduinoJson.h>
 
 // Create the empty JSON document
-const size_t capacity = JSON_OBJECT_SIZE(1) + 3 * JSON_OBJECT_SIZE(2);
+const size_t capacity = JSON_OBJECT_SIZE(1) + 2 * JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3);
 DynamicJsonDocument doc(capacity);
 JsonObject sensors = doc.createNestedObject("sensors");
 JsonObject sensors_DH22 = sensors.createNestedObject("DH22");
 JsonObject sensors_battery = sensors.createNestedObject("battery");
 
 // serialise the JSON for transmission
-void toJsonString(const char *deviceID, const float temperature, const float humidity, const float voltage, char *serialData, int length);
+void toJsonString(const char *deviceID, const int packetID, const float temperature, const float humidity, const float voltage, char *serialData, int length);
 
 // DH22 temperature/humidity sensor
 DHT dht;
+
+// packet id
+unsigned int packetID;
 
 void setup()
 {
@@ -61,6 +55,9 @@ void setup()
     while (1)
       ;
   }
+
+  // misc.
+  packetID = 0;
 }
 
 void loop()
@@ -78,9 +75,11 @@ void loop()
   measuredvbat *= 3.3;  // Multiply by 3.3V, our reference voltage
   measuredvbat /= 1024; // convert to voltage
 
+  ++packetID;
+
   // serialise the JSON for transmission
   char serialData[255];
-  toJsonString(DEVICE_ID, temperature, humidity, measuredvbat, serialData, sizeof(serialData) - 1);
+  toJsonString(DEVICE_ID, packetID, temperature, humidity, measuredvbat, serialData, sizeof(serialData) - 1);
 
   // send in async / non-blocking mode
   while (LoRa.beginPacket() == 0)
@@ -96,20 +95,21 @@ void loop()
   Serial.print("TX Packet: ");
   Serial.println(serialData);
 
-  delay(50);                      // Lets the light flash to show transmission
+  // delay(50);                      // Lets the light flash to show transmission
   digitalWrite(LED_BUILTIN, LOW); // show we're asleep
 
   // sleep
-  Watchdog.sleep(SLEEP_SECONDS * 1000);
-  // delay(SLEEP_SECONDS * 1000);
+  // Watchdog.sleep(SLEEP_SECONDS * 1000);
+  delay(SLEEP_SECONDS * 1000);
 }
 
 // serialise the JSON document from the data
 // TODO: FIX RETURNING ADDRESS OF LOCAL VARIABLE
 
-void toJsonString(const char *deviceID, const float temperature, const float humidity, const float voltage, char *serialData, int length)
+void toJsonString(const char *deviceID, const int packetID, const float temperature, const float humidity, const float voltage, char *serialData, int length)
 {
   doc["deviceID"] = deviceID;
+  doc["packetID"] = packetID;
   sensors_DH22["temperature"] = temperature;
   sensors_DH22["humidity"] = humidity;
   sensors_battery["voltage"] = voltage;
