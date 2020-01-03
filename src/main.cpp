@@ -16,6 +16,9 @@
 #include <Adafruit_SleepyDog.h>
 #include <ArduinoJson.h>
 
+// set true to bypass acquisition and send a fixed test data packet
+#define TEST_MODE true
+
 // Create the empty JSON document
 const size_t capacity = JSON_OBJECT_SIZE(1) + 2 * JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3);
 DynamicJsonDocument doc(capacity);
@@ -34,6 +37,14 @@ unsigned int packetID;
 
 void setup()
 {
+  pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(BLUE_LED, OUTPUT);
+
+  // set status LED to 'test'
+  int lamp_colour = (TEST_MODE) ? BLUE : OFF;
+  setLedColour(lamp_colour);
+
   Serial.begin(115200);
   delay(1000);
 
@@ -78,12 +89,18 @@ void loop()
   char serialData[255];
   toJsonString(DEVICE_ID, packetID, temperature, humidity, measuredvbat, serialData, sizeof(serialData) - 1);
 
+  if (TEST_MODE)
+  {
+    const char *test_string = TEST_STRING;
+    memset(serialData, 0, sizeof(serialData));
+    strcpy(serialData, test_string);
+  }
+
   // send in async / non-blocking mode
   while (LoRa.beginPacket() == 0)
   {
     delay(100);
   }
-
   LoRa.beginPacket();
   LoRa.print(serialData);
   LoRa.endPacket(true); // true = async / non-blocking mode

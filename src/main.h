@@ -19,4 +19,7 @@
 // number of seconds between transmissions
 #define SLEEP_SECONDS 3
 
+// string for unit testing
+#define TEST_STRING "{\"sensors\":{\"DH22\":{\"temperature\":7.2,\"humidity\":92.9},\"battery\":{\"voltage\":3.776953}},\"deviceID\":\"FEATHE32U4RFM9XLORA_001\",\"packetID\":12345678}\0"
+
 #endif

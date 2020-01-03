@@ -33,3 +33,33 @@ const char *deviceID(const char *type)
 
     return deviceID;
 }
+
+void setLedColour(int colour)
+{
+    switch (colour)
+    {
+    case RED:
+        digitalWrite(RED_LED, HIGH);
+        digitalWrite(GREEN_LED, LOW);
+        digitalWrite(BLUE_LED, LOW);
+        break;
+
+    case BLUE:
+        digitalWrite(RED_LED, LOW);
+        digitalWrite(GREEN_LED, LOW);
+        digitalWrite(BLUE_LED, HIGH);
+        break;
+
+    case GREEN:
+        digitalWrite(RED_LED, LOW);
+        digitalWrite(GREEN_LED, HIGH);
+        digitalWrite(BLUE_LED, LOW);
+        break;
+
+    case OFF:
+        digitalWrite(RED_LED, LOW);
+        digitalWrite(GREEN_LED, LOW);
+        digitalWrite(BLUE_LED, LOW);
+        break;
+    }
+}
