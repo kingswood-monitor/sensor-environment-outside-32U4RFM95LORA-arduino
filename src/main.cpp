@@ -16,18 +16,16 @@
 #include <Adafruit_SleepyDog.h>
 #include <ArduinoJson.h>
 
-// set true to bypass acquisition and send a fixed test data packet
-#define TEST_MODE true
+// set true to sleep between transmissions to conserve battery
+#define SLEEP_MODE false
 
-// Create the empty JSON document
-const size_t capacity = JSON_OBJECT_SIZE(1) + 2 * JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3);
-DynamicJsonDocument doc(capacity);
+// Create the empty JSON document - https://arduinojson.org/v6/assistant/
+const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + 170;
+DynamicJsonDocument doc(capacity); // TODO: Make statis
 JsonObject sensors = doc.createNestedObject("sensors");
 JsonObject sensors_DH22 = sensors.createNestedObject("DH22");
-JsonObject sensors_battery = sensors.createNestedObject("battery");
-
-// serialise the JSON for transmission
-void toJsonString(const char *deviceID, const int packetID, const float temperature, const float humidity, const float voltage, char *serialData, int length);
+JsonObject status = doc.createNestedObject("status");
+JsonObject status_lora = status.createNestedObject("lora");
 
 // DH22 temperature/humidity sensor
 DHT dht;
@@ -41,8 +39,7 @@ void setup()
   pinMode(GREEN_LED, OUTPUT);
   pinMode(BLUE_LED, OUTPUT);
 
-  // set status LED to 'test'
-  int lamp_colour = (TEST_MODE) ? BLUE : OFF;
+  int lamp_colour = (SLEEP_MODE) ? OFF : RED;
   setLedColour(lamp_colour);
 
   Serial.begin(115200);
@@ -73,10 +70,6 @@ void loop()
   // code resumes here on wake.
   digitalWrite(LED_BUILTIN, HIGH);
 
-  // read the sensor
-  float temperature = dht.getTemperature();
-  float humidity = dht.getHumidity();
-
   // get battery voltage
   float measuredvbat = analogRead(VBATPIN);
   measuredvbat *= 2;    // we divided by 2, so multiply back
@@ -87,14 +80,18 @@ void loop()
 
   // serialise the JSON for transmission
   char serialData[255];
-  toJsonString(DEVICE_ID, packetID, temperature, humidity, measuredvbat, serialData, sizeof(serialData) - 1);
 
-  if (TEST_MODE)
-  {
-    const char *test_string = TEST_STRING;
-    memset(serialData, 0, sizeof(serialData));
-    strcpy(serialData, test_string);
-  }
+  doc["deviceID"] = DEVICE_ID;
+  doc["packetID"] = packetID;
+  sensors_DH22["temperature"] = dht.getTemperature();
+  sensors_DH22["humidity"] = dht.getHumidity();
+  status_lora["packetRssi"] = LoRa.packetRssi();
+  status_lora["packetSnr"] = LoRa.packetSnr();
+  status_lora["packetFrequencyError"] = LoRa.packetFrequencyError();
+  status["batteryVoltage"] = measuredvbat;
+  status["info"] = "OK";
+
+  serializeJson(doc, serialData);
 
   // send in async / non-blocking mode
   while (LoRa.beginPacket() == 0)
@@ -113,20 +110,12 @@ void loop()
   digitalWrite(LED_BUILTIN, LOW); // show we're asleep
 
   // sleep
-  // Watchdog.sleep(SLEEP_SECONDS * 1000);
-  delay(SLEEP_SECONDS * 1000);
-}
-
-// serialise the JSON document from the data
-// TODO: FIX RETURNING ADDRESS OF LOCAL VARIABLE
-
-void toJsonString(const char *deviceID, const int packetID, const float temperature, const float humidity, const float voltage, char *serialData, int length)
-{
-  doc["deviceID"] = deviceID;
-  doc["packetID"] = packetID;
-  sensors_DH22["temperature"] = temperature;
-  sensors_DH22["humidity"] = humidity;
-  sensors_battery["voltage"] = voltage;
-
-  serializeJson(doc, serialData, length);
+  if (SLEEP_MODE)
+  {
+    Watchdog.sleep(SLEEP_SECONDS * 1000);
+  }
+  else
+  {
+    delay(SLEEP_SECONDS * 1000);
+  }
 }

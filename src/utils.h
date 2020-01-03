@@ -17,7 +17,4 @@ void printBanner(const char *firmware_filename, float firmware_version, const ch
 //
 void setLedColour(int colour);
 
-// construct the device ID from the chip ID e.g. "HUZZAHESP8266-2DC832"
-const char *deviceID(const char *type);
-
 #endif

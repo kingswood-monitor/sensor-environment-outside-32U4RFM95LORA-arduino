@@ -17,23 +17,6 @@ void printBanner(const char *firmware_filename, float firmware_version, const ch
     Serial.println();
 }
 
-const char *deviceID(const char *type)
-{
-    // char buf[7];
-    // sprintf(buf, "%lX", ESP.getChipId());
-
-    // char *deviceID;
-    // deviceID = (char *)malloc(strlen(type) + 8);
-
-    // strcpy(deviceID, type);
-    // strcat(deviceID, "-");
-    // strcat(deviceID, buf);
-
-    const char *deviceID = "FEATHER32U4LORA-001";
-
-    return deviceID;
-}
-
 void setLedColour(int colour)
 {
     switch (colour)

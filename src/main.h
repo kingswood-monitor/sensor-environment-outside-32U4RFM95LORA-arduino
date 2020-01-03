@@ -3,8 +3,8 @@
 
 // Firmware info
 #define FIRMWARE_FILENAME "feather32u4_rfm9x-arduino-lora433TX"
-#define FIRMWARE_VERSION 1.2
-#define DEVICE_ID "32U4RFM95LORA-001"
+#define FIRMWARE_VERSION 1.3
+#define DEVICE_ID "FEATHER32U4LORA-001"
 
 // pin assignments
 #define LED_BUILTIN 13   // red onboard LED
@@ -18,8 +18,5 @@
 
 // number of seconds between transmissions
 #define SLEEP_SECONDS 3
-
-// string for unit testing
-#define TEST_STRING "{\"sensors\":{\"DH22\":{\"temperature\":7.2,\"humidity\":92.9},\"battery\":{\"voltage\":3.776953}},\"deviceID\":\"FEATHE32U4RFM9XLORA_001\",\"packetID\":12345678}\0"
 
 #endif
