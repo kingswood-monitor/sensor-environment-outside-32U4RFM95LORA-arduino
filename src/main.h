@@ -4,7 +4,7 @@
 // Firmware info
 #define FIRMWARE_TITLE "Kingswood LoRa Transmitter"
 #define FIRMWARE_FILENAME "feather32u4_rfm9x-arduino-lora433TX"
-#define FIRMWARE_VERSION 1.3
+#define FIRMWARE_VERSION 1.4
 #define DEVICE_ID "FEATHER32U4LORA-001"
 
 // pin assignments
