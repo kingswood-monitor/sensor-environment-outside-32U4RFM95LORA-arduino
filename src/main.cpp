@@ -10,6 +10,7 @@
 #include <SPI.h>
 #include <LoRa.h>
 #include <DHT.h>
+#include <Ticker.h> // https://github.com/sstaub/Ticker.git
 
 #include "main.h"
 #include "utils.h"
@@ -38,6 +39,8 @@ void setup()
   pinMode(RED_LED, OUTPUT);
   pinMode(GREEN_LED, OUTPUT);
   pinMode(BLUE_LED, OUTPUT);
+
+  digitalWrite(LED_BUILTIN, HIGH); // inverted = 'OFF'
 
   int lamp_colour = (SLEEP_MODE) ? OFF : RED;
   setLedColour(lamp_colour);
@@ -102,12 +105,19 @@ void loop()
   LoRa.print(serialData);
   LoRa.endPacket(true); // true = async / non-blocking mode
 
+  // signal transmission
+  digitalWrite(LED_BUILTIN, LOW); // inverted = 'ON'
+  flash.start();
+
   // log to serial port
   Serial.print("TX Packet: ");
   Serial.println(serialData);
 
   // delay(50);                      // Lets the light flash to show transmission
   digitalWrite(LED_BUILTIN, LOW); // show we're asleep
+
+  // update timers
+  flash.update();
 
   // sleep
   if (SLEEP_MODE)
@@ -118,4 +128,9 @@ void loop()
   {
     delay(SLEEP_SECONDS * 1000);
   }
+}
+
+void flashCB()
+{
+  digitalWrite(LED_BUILTIN, HIGH); // inverted = 'OFF'
 }

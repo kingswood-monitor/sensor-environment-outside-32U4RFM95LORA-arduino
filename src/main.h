@@ -19,4 +19,8 @@
 // number of seconds between transmissions
 #define SLEEP_SECONDS 3
 
+// timers
+void flashCB();
+Ticker flash(flashCB, 50, 1);
+
 #endif
