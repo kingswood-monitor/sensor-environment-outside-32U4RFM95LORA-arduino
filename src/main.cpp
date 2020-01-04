@@ -9,7 +9,7 @@
 
 #include <SPI.h>
 #include <LoRa.h>
-#include <DHT.h>
+#include <SHT1x.h>
 #include <Ticker.h> // https://github.com/sstaub/Ticker.git
 
 #include "main.h"
@@ -24,12 +24,12 @@
 const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + 170;
 DynamicJsonDocument doc(capacity); // TODO: Make statis
 JsonObject sensors = doc.createNestedObject("sensors");
-JsonObject sensors_DH22 = sensors.createNestedObject("DH22");
+JsonObject sensors_SHT15 = sensors.createNestedObject("SHT15");
 JsonObject status = doc.createNestedObject("status");
 JsonObject status_lora = status.createNestedObject("lora");
 
-// DH22 temperature/humidity sensor
-DHT dht;
+// SHT15 temperature/humidity sensor
+SHT1x sht1x(SHT15dataPin, SHT15clockPin);
 
 // packet id
 unsigned int packetID;
@@ -53,7 +53,6 @@ void setup()
 
   // initialise hardware
   pinMode(LED_BUILTIN, OUTPUT);
-  dht.setup(DH22_DATA_PIN);
   LoRa.setPins(NSS, NRESET, DIO0);
 
   // start LoRa
@@ -86,8 +85,8 @@ void loop()
 
   doc["deviceID"] = DEVICE_ID;
   doc["packetID"] = packetID;
-  sensors_DH22["temperature"] = dht.getTemperature();
-  sensors_DH22["humidity"] = dht.getHumidity();
+  sensors_SHT15["temperature"] = sht1x.readTemperatureC();
+  sensors_SHT15["humidity"] = sht1x.readHumidity();
   status_lora["packetRssi"] = LoRa.packetRssi();
   status_lora["packetSnr"] = LoRa.packetSnr();
   status_lora["packetFrequencyError"] = LoRa.packetFrequencyError();
