@@ -18,11 +18,4 @@
 #define NRESET 4 // Reset pin
 #define DIO0 7   // DIO0 pin
 
-// number of seconds between transmissions
-#define SLEEP_SECONDS 3
-
-// timers
-void flashCB();
-Ticker flash(flashCB, 50, 1);
-
 #endif

@@ -40,7 +40,7 @@ void setup()
   pinMode(GREEN_LED, OUTPUT);
   pinMode(BLUE_LED, OUTPUT);
 
-  digitalWrite(LED_BUILTIN, HIGH); // inverted = 'OFF'
+  digitalWrite(LED_BUILTIN, LOW);
 
   int lamp_colour = (SLEEP_MODE) ? OFF : RED;
   setLedColour(lamp_colour);
@@ -70,7 +70,6 @@ void setup()
 void loop()
 {
   // code resumes here on wake.
-  digitalWrite(LED_BUILTIN, HIGH);
 
   // get battery voltage
   float measuredvbat = analogRead(VBATPIN);
@@ -105,18 +104,13 @@ void loop()
   LoRa.endPacket(true); // true = async / non-blocking mode
 
   // signal transmission
-  digitalWrite(LED_BUILTIN, LOW); // inverted = 'ON'
-  flash.start();
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(50);
+  digitalWrite(LED_BUILTIN, LOW);
 
   // log to serial port
   Serial.print("TX Packet: ");
   Serial.println(serialData);
-
-  // delay(50);                      // Lets the light flash to show transmission
-  digitalWrite(LED_BUILTIN, LOW); // show we're asleep
-
-  // update timers
-  flash.update();
 
   // sleep
   if (SLEEP_MODE)
@@ -127,9 +121,4 @@ void loop()
   {
     delay(SLEEP_SECONDS * 1000);
   }
-}
-
-void flashCB()
-{
-  digitalWrite(LED_BUILTIN, HIGH); // inverted = 'OFF'
 }
