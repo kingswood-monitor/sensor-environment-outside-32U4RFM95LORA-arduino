@@ -11,7 +11,7 @@ void printBanner(const char *firmware_filename, float firmware_version, const ch
     Serial.println("----------------------------------------------------------------------");
     Serial.print("Firmware filename   : ");
     Serial.println(firmware_filename);
-    Serial.print("Sensor ID           : ");
+    Serial.print("Device ID           : ");
     Serial.println(deviceID);
     Serial.println("======================================================================");
     Serial.println();
