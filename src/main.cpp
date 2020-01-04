@@ -18,7 +18,9 @@
 #include <ArduinoJson.h>
 
 // set true to sleep between transmissions to conserve battery
-#define SLEEP_MODE false
+#define SLEEP_MODE true
+// number of seconds between transmissions
+#define SLEEP_SECONDS 3
 
 // Create the empty JSON document - https://arduinojson.org/v6/assistant/
 const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + 170;
