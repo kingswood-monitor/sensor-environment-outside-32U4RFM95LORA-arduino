@@ -18,17 +18,16 @@
 #include <ArduinoJson.h>
 
 // set true to sleep between transmissions to conserve battery
-#define SLEEP_MODE true
+#define SLEEP_MODE false
 // number of seconds between transmissions
 #define SLEEP_SECONDS 3
 
 // Create the empty JSON document - https://arduinojson.org/v6/assistant/
-const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + 170;
-DynamicJsonDocument doc(capacity); // TODO: Make statis
+const size_t capacity = JSON_OBJECT_SIZE(1) + 2 * JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4);
+StaticJsonDocument<capacity> doc;
 JsonObject sensors = doc.createNestedObject("sensors");
 JsonObject sensors_SHT15 = sensors.createNestedObject("SHT15");
 JsonObject status = doc.createNestedObject("status");
-JsonObject status_lora = status.createNestedObject("lora");
 
 // SHT15 temperature/humidity sensor
 SHT1x sht1x(SHT15dataPin, SHT15clockPin);
@@ -48,7 +47,7 @@ void setup()
   setLedColour(lamp_colour);
 
   Serial.begin(115200);
-  delay(1000);
+  delay(2000);
 
   // print the firmware banner information
   printBanner(FIRMWARE_FILENAME, FIRMWARE_VERSION, DEVICE_ID);
@@ -88,9 +87,6 @@ void loop()
   doc["packetID"] = packetID;
   sensors_SHT15["temperature"] = sht1x.readTemperatureC();
   sensors_SHT15["humidity"] = sht1x.readHumidity();
-  status_lora["packetRssi"] = LoRa.packetRssi();
-  status_lora["packetSnr"] = LoRa.packetSnr();
-  status_lora["packetFrequencyError"] = LoRa.packetFrequencyError();
   status["batteryVoltage"] = measuredvbat;
   status["info"] = "OK";
 
