@@ -1,4 +1,4 @@
-# Kingswood LoRa transmitter firmware
+# Kingswood Monitor outside environment sensor firmware
 
 This is the firmware for the Kingswood LoRa transmitter. 
 

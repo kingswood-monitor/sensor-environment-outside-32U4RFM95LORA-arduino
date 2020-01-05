@@ -1,4 +1,4 @@
-/* feather32u4_rfm9x-arduino-lora433TX
+/* Kingswood Monitor outside environment sensor firmware.
  * 
  * Firmware for the LoRa transmitter. 
  * Reads sensor data and battery voltage, packages as JSON string, and transmits.
