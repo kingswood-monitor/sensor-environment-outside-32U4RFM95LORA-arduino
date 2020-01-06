@@ -10,6 +10,7 @@
  
     packetID = 1234
     protocol n = 1.1
+
     device
       ID = ESP8266-001
       type = ESP8266
@@ -23,14 +24,13 @@
         RSSI n = -98
         SNR n = 23
         frequencyError n = 12234
-    sensors
-      SHT15
-        temperature n = 21.1
-        humidity n = 87
-      BH1750
-        lux n = 600
-      BMP388
-        mbars n = 1023
+
+    measurement
+      temperature n = 21.1
+      humidity n = 87
+      lux n = 600
+      mbars n = 1023
+        
     status 
       message = OK
       description = All's well
@@ -82,16 +82,13 @@
 // number of seconds between transmissions
 #define SLEEP_SECONDS 3
 
-const size_t capacity = 2*JSON_OBJECT_SIZE(1) + 3*JSON_OBJECT_SIZE(2) + 2*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7);
+const size_t capacity = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7);
 StaticJsonDocument<capacity> doc;
 
 JsonObject device = doc.createNestedObject("device");
 JsonObject device_battery = device.createNestedObject("battery");
 JsonObject device_lora = device.createNestedObject("lora");
-JsonObject sensors = doc.createNestedObject("sensors");
-JsonObject sensors_SHT15 = sensors.createNestedObject("SHT15");
-JsonObject sensors_BH1750 = sensors.createNestedObject("BH1750");
-JsonObject sensors_BMP388 = sensors.createNestedObject("BMP388");
+JsonObject measurement = doc.createNestedObject("measurement");
 JsonObject status = doc.createNestedObject("status");
 
 // Initialise sensors
@@ -158,10 +155,10 @@ void loop()
   device_lora["frequencyError"] = nullptr;
 
   // sensors
-  sensors_SHT15["temperature"] = sht1x.readTemperatureC();
-  sensors_SHT15["humidity"] = sht1x.readHumidity();
-  sensors_BH1750["lux"] = 600;
-  sensors_BMP388["mbars"] = 1023;
+  measurement["temperature"] = sht1x.readTemperatureC();
+  measurement["humidity"] = sht1x.readHumidity();
+  measurement["lux"] = nullptr;
+  measurement["mbars"] = nullptr;
 
   // status
   status["message"] = "OK";
