@@ -28,6 +28,7 @@
     measurement
       temperature n = 21.1
       humidity n = 87
+      co2 = 567
       lux n = 600
       mbars n = 1023
         
@@ -82,7 +83,7 @@
 // number of seconds between transmissions
 #define SLEEP_SECONDS 3
 
-const size_t capacity = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7);
+const size_t capacity = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7);
 StaticJsonDocument<capacity> doc;
 
 JsonObject device = doc.createNestedObject("device");
@@ -157,6 +158,7 @@ void loop()
   // sensors
   measurement["temperature"] = sht1x.readTemperatureC();
   measurement["humidity"] = sht1x.readHumidity();
+  measurement["co2"] = nullptr;
   measurement["lux"] = nullptr;
   measurement["mbars"] = nullptr;
 
