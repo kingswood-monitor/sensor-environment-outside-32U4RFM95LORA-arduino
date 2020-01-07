@@ -188,7 +188,8 @@ void loop()
 
   // log to serial port
   Serial.println("TX Packet: ");
-  if (DEBUG) {
+  if (DEBUG)
+  {
     serializeJsonPretty(doc, Serial);
     Serial.println();
     Serial.println("---");
