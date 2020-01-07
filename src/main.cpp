@@ -53,15 +53,15 @@
 #define DEBUG true // set false to suppress debug info on Serial
 
 // Firmware info
-#define FIRMWARE_TITLE "Kingswood System Environment Sensor"
-#define FIRMWARE_FILENAME "sensor-environment"
+#define FIRMWARE_TITLE "Environment Sensor (Outside)"
+#define FIRMWARE_NAME "sensor-environment-outside-32U4RFM95LORA-arduino"
 #define FIRMWARE_VERSION "1.4"
 
 // JSON protocol version
 #define JSON_PROTOCOL_VERSION "1.0"
 
 // device info
-#define DEVICE_TYPE "FEATHER32U4-RFM9X-LORA"
+#define DEVICE_TYPE "32U4RFM95LORA"
 #define DEVICE_ID "001"
 #define DEVICE_OS "arduino"
 #define DEVICE_LOCATION "Outside"
