@@ -86,10 +86,11 @@
 // number of seconds between transmissions
 #define SLEEP_SECONDS 3
 
-const size_t capacity = 2 * JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 2 * JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7);
+const size_t capacity = 2 * JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + 3 * JSON_OBJECT_SIZE(5);
 StaticJsonDocument<capacity> doc;
 
 JsonObject device = doc.createNestedObject("device");
+JsonObject device_firmware = device.createNestedObject("firmware");
 JsonObject device_battery = device.createNestedObject("battery");
 JsonObject device_lora = device.createNestedObject("lora");
 JsonObject measurement = doc.createNestedObject("measurement");
@@ -136,21 +137,23 @@ void loop()
 
   ++packetID;
   doc["packetID"] = packetID;
-  doc["protocol"] = JSON_PROTOCOL_VERSION;
+  doc["protocol"] = JSON_PROTOCOL;
 
   // device
   device["id"] = DEVICE_ID;
-  device["type"] = DEVICE_TYPE;
-  device["location"] = DEVICE_LOCATION;
-  device["firmware"] = FIRMWARE_VERSION;
-  device["os"] = DEVICE_OS;
+  device["type"] = FIRMWARE_MCU;
+
+  // firmware
+  device_firmware["version"] = FIRMWARE_VERSION;
+  device_firmware["slug"] = FIRMWARE_SLUG;
+  device_firmware["os"] = FIRMWARE_OS;
 
   // battery
-  device_battery["active"] = BATTERY_ACTIVE;
   float measuredvbat = analogRead(VBATPIN);
   measuredvbat *= 2;    // we divided by 2, so multiply back
   measuredvbat *= 3.3;  // Multiply by 3.3V, our reference voltage
   measuredvbat /= 1024; // convert to voltage
+  device_battery["active"] = BATTERY_ACTIVE;
   device_battery["voltage"] = 3.8;
 
   // lora - NULL for sending device
