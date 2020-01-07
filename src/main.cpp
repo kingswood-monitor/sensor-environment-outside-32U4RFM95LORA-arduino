@@ -54,19 +54,16 @@
 
 #define DEBUG true // set false to suppress debug info on Serial
 
-// Firmware info
-#define FIRMWARE_TITLE "Environment Sensor (Outside)"
-#define FIRMWARE_NAME "sensor-environment-outside-32U4RFM95LORA-arduino"
-#define FIRMWARE_VERSION "1.4"
+#define MQTT_TOPIC_ROOT "outside"
 
-// JSON protocol version
-#define JSON_PROTOCOL_VERSION "1.0"
-
-// device info
-#define DEVICE_TYPE "32U4RFM95LORA"
-#define DEVICE_ID "001"
-#define DEVICE_OS "arduino"
-#define DEVICE_LOCATION "Outside"
+// firmware info
+#define FIRMWARE_NAME "Environment Sensor (Outside)"
+#define FIRMWARE_VERSION "0.2"
+#define FIRMWARE_SLUG "sensor-environment-outside-32U4RFM95LORA-arduino"
+#define FIRMWARE_MCU "32U4RFM95LORA"
+#define FIRMWARE_OS "arduino"
+#define DEVICE_ID "001" // comment out if device has Sys.DeviceID()
+#define JSON_PROTOCOL "1.1"
 
 // battery info
 #define BATTERY_ACTIVE true
