@@ -1,9 +1,12 @@
-/* Kingswood Monitor outside environment sensor firmware.
+/* Kingswood Monitor Environment Sensor (LoRa)
  * 
- * Firmware for the LoRa transmitter. 
- * Reads sensor data and battery voltage, packages as JSON string, and transmits.
+ * Firmware for a LoRa based sensor
+ * Reads sensor data and battery voltage
+ * Package as JSON strind
+ * Transmits
  *  
- * NOTE: Implements 'sleep' function between data transmission, which disables the USB serial line.
+ * NOTE: 
+ * Implements 'sleep' function between data transmission, which disables the USB serial line.
  * Reset the device before flashing.
  * 
  *  JSON Format V1.0
