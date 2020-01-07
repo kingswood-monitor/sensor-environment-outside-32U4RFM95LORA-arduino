@@ -86,7 +86,7 @@
 // number of seconds between transmissions
 #define SLEEP_SECONDS 3
 
-const size_t capacity = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7);
+const size_t capacity = 2 * JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 2 * JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7);
 StaticJsonDocument<capacity> doc;
 
 JsonObject device = doc.createNestedObject("device");
@@ -115,7 +115,7 @@ void setup()
   Serial.begin(115200);
   delay(2000);
 
-  utils::printBanner(FIRMWARE_TITLE, FIRMWARE_VERSION, DEVICE_OS, FIRMWARE_FILENAME, JSON_PROTOCOL_VERSION, DEVICE_ID);
+  utils::printBanner(FIRMWARE_TITLE, FIRMWARE_VERSION, DEVICE_OS, FIRMWARE_NAME, JSON_PROTOCOL_VERSION, DEVICE_ID);
 
   if (!LoRa.begin(433E6))
   {
@@ -170,7 +170,6 @@ void loop()
   status["description"] = nullptr;
 
   serializeJson(doc, serialData);
-
 
   // send in async / non-blocking mode
   while (LoRa.beginPacket() == 0)
