@@ -8,18 +8,19 @@
  * NOTE: 
  * Implements 'sleep' function between data transmission, which disables the USB serial line.
  * Reset the device before flashing.
- * 
- *  JSON Format V1.0
- 
+ *  
+ *  Format
+ *  ------------------------------------------------------------
     packetID = 1234
     protocol n = 1.1
 
     device
       ID = ESP8266-001
       type = ESP8266
-      location = livingroom
-      firmware n = 1.1 
-      os = mongoose
+      firmware
+        version n = 0.2
+        slug = sensor-environment-outside-32U4RFM95LORA-arduino
+        os = mongoose
       battery
         active b = true
         voltage n = 3.8
@@ -38,6 +39,7 @@
     status 
       message = OK
       description = All's well
+    ---------------------------------------------------------------
  * 
  */
 
